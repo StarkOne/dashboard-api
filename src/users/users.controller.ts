@@ -9,23 +9,23 @@ import { IUserController } from './users.interface';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
-  constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
-    super(loggerService);
+	constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
+		super(loggerService);
 
-    const routes: IControllerRoute[] = [
-      { path: '/login', method: 'post', func: this.login },
-      { path: '/register', method: 'post', func: this.register },
-    ];
+		const routes: IControllerRoute[] = [
+			{ path: '/login', method: 'post', func: this.login },
+			{ path: '/register', method: 'post', func: this.register },
+		];
 
-    this.bindRoutes(routes);
-  }
+		this.bindRoutes(routes);
+	}
 
-  public register(req: Request, res: Response, next: NextFunction) {
-    this.ok(res, 'register');
-  }
+	public register(req: Request, res: Response, next: NextFunction): void {
+		this.ok(res, 'register');
+	}
 
-  public login(req: Request, res: Response, next: NextFunction) {
-    this.ok(res, 'login');
-    // next(new HTTPError(401, 'ошибка авторизации', 'login'));
-  }
+	public login(req: Request, res: Response, next: NextFunction): void {
+		this.ok(res, 'login');
+		// next(new HTTPError(401, 'ошибка авторизации', 'login'));
+	}
 }
