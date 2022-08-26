@@ -7,6 +7,7 @@
 		"start": "node ./dist/main.js",
 		"build": "tsc",
 		"dev": "nodemon",
+		"dev:inspect": "nodemon -e ts,json --exec node --inspect=localhost:9222 -r ts-node/register src/main.ts",
 		"lint:fix": "eslint ./src/** --fix",
 		"lint": "eslint ./src/**",
 		"test": "jest",
