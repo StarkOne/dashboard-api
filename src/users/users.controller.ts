@@ -6,6 +6,8 @@ import { IControllerRoute } from '../common/router.interface';
 import { ILogger } from '../logger/logger.interface';
 import { TYPES } from '../type';
 import { IUserController } from './users.interface';
+import { UserLoginDto } from './dto/user-login.dt';
+import { UserRegisterDto } from './dto/user-register.dto';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -20,12 +22,14 @@ export class UserController extends BaseController implements IUserController {
 		this.bindRoutes(routes);
 	}
 
-	public register(req: Request, res: Response, next: NextFunction): void {
-		this.ok(res, 'register');
-	}
-
-	public login(req: Request, res: Response, next: NextFunction): void {
+	public login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
+		console.log(req.body);
 		this.ok(res, 'login');
 		// next(new HTTPError(401, 'ошибка авторизации', 'login'));
+	}
+
+	public register(req: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): void {
+		console.log(req.body);
+		this.ok(res, 'register');
 	}
 }
