@@ -8,6 +8,7 @@ import { TYPES } from '../type';
 import { IUserController } from './users.interface';
 import { UserLoginDto } from './dto/user-login.dt';
 import { UserRegisterDto } from './dto/user-register.dto';
+import { User } from './user.entity';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -28,8 +29,15 @@ export class UserController extends BaseController implements IUserController {
 		// next(new HTTPError(401, 'ошибка авторизации', 'login'));
 	}
 
-	public register(req: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): void {
-		console.log(req.body);
+	public async register(
+		{ body }: Request<{}, {}, UserRegisterDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const newUser = new User(body.email, body.name);
+		await newUser.setPassword(body.password);
+		console.log(newUser);
+
 		this.ok(res, 'register');
 	}
 }
