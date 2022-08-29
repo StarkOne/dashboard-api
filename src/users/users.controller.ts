@@ -13,6 +13,7 @@ import { HTTPError } from '../errors/http-error.class';
 import { ValidateMiddleware } from '../common/validate.middleware';
 import { sign } from 'jsonwebtoken';
 import { IConfigService } from '../config/config.service.interface';
+import { AuthGuard } from '../common/auth.guard';
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -28,6 +29,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/info',
 				method: 'get',
 				func: this.info,
+				middlewares: [new AuthGuard()],
 			},
 			{
 				path: '/login',
@@ -46,10 +48,15 @@ export class UserController extends BaseController implements IUserController {
 		this.bindRoutes(routes);
 	}
 
-	public info({ user }: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
-		console.log(user);
+	public async info(
+		req: Request<{}, {}, UserLoginDto>,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> {
+		const user = await this.userService.getUserInfo(req.user);
 		this.ok(res, {
-			user,
+			id: user?.id,
+			email: user?.email,
 		});
 	}
 
