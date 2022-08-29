@@ -21,7 +21,12 @@ export class UserController extends BaseController implements IUserController {
 		super(loggerService);
 
 		const routes: IControllerRoute[] = [
-			{ path: '/login', method: 'post', func: this.login },
+			{
+				path: '/login',
+				method: 'post',
+				func: this.login,
+				middlewares: [new ValidateMiddleware(UserLoginDto)],
+			},
 			{
 				path: '/register',
 				method: 'post',
@@ -39,7 +44,10 @@ export class UserController extends BaseController implements IUserController {
 		next: NextFunction,
 	): Promise<void> {
 		const result = await this.userService.validateUser(body);
-		this.ok(res, result);
+		if (!result) {
+			return next(new HTTPError(401, 'Ошибка авторизации', 'users:login'));
+		}
+		this.ok(res, {});
 	}
 
 	public async register(
@@ -51,6 +59,6 @@ export class UserController extends BaseController implements IUserController {
 		if (!result) {
 			return next(new HTTPError(422, 'Такой пользователь уже существует!', 'users:register'));
 		}
-		this.ok(res, { email: result.email, name: result.name });
+		this.ok(res, { email: result.email, name: result.name, id: result.id });
 	}
 }
