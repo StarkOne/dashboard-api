@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import express, { Express } from 'express';
 import { Server } from 'http';
 import { inject, injectable } from 'inversify';
-import { ExeptionFilter } from './errors/exeption.filter';
 import { ILogger } from './logger/logger.interface';
 import { TYPES } from './type';
 import { UserController } from './users/users.controller';
@@ -52,5 +51,9 @@ export class App {
 		this.server = this.app.listen(this.port, () => {
 			this.logger.log(`Server start on port: ${this.port}`);
 		});
+	}
+
+	public close(): void {
+		this.server.close();
 	}
 }
